@@ -23,7 +23,7 @@ public class SqlHelper extends SQLiteOpenHelper {
 
     private static SqlHelper INSTANCE;
 
-    static SqlHelper getInstance(Context context) {
+    public static SqlHelper getInstance(Context context) {
         if(INSTANCE == null) {
             INSTANCE = new SqlHelper(context);
         }
@@ -128,7 +128,7 @@ public class SqlHelper extends SQLiteOpenHelper {
         return calcId;
     }
 
-    long removeItem(String type, int id) {
+    public long removeItem(String type, int id) {
         SQLiteDatabase db = getWritableDatabase();
         db.beginTransaction();
         long calcId = 0;

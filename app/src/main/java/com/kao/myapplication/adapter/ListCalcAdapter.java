@@ -1,5 +1,7 @@
 package com.kao.myapplication.adapter;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,9 +32,12 @@ import androidx.recyclerview.widget.RecyclerView;
 public class ListCalcAdapter extends RecyclerView.Adapter<ListCalcViewHolder> implements OnAdapterItemClickListener {
 
     private List<Register> datas;
+    private Context context;
+    private Activity activity;
 
     //      cria variavel e construtor para pegar items
-    public ListCalcAdapter(List<Register> datas) {
+    public ListCalcAdapter(List<Register> datas, Context context) {
+        this.context = context;
         this.datas = datas;
     }
 
@@ -43,7 +48,6 @@ public class ListCalcAdapter extends RecyclerView.Adapter<ListCalcViewHolder> im
 
         return new ListCalcViewHolder(LayoutInflater.from(parent.getContext())
                 .inflate(android.R.layout.simple_list_item_1, parent, false));
-//        return new ListCalcViewHolder(LayoutInflater().inflate(android.R.layout.simple_list_item_1, parent, false));
     }
 
     @Override
@@ -63,14 +67,14 @@ public class ListCalcAdapter extends RecyclerView.Adapter<ListCalcViewHolder> im
         // verificar qual tipo de dado deve ser EDITADO na tela seguinte
         switch (type) {
             case "imc":
-                Intent intent = new Intent(ListCalcActivity.this, ImcActivity.class);
+                Intent intent = new Intent(context, ImcActivity.class);
                 intent.putExtra("updateId", id);
-                startActivity(intent);
+                context.startActivity(intent);
                 break;
             case "tmb":
-                Intent i = new Intent(ListCalcActivity.this, TmbActivity.class);
+                Intent i = new Intent(context, TmbActivity.class);
                 i.putExtra("updateId", id);
-                startActivity(i);
+                context.startActivity(i);
                 break;
         }
     }
@@ -78,18 +82,18 @@ public class ListCalcAdapter extends RecyclerView.Adapter<ListCalcViewHolder> im
     @Override
     public void onLongClick(int position, String type, int id) {
         // evento de exclusão (PERGUNTAR ANTES PARA O USUARIO)
-        AlertDialog alertDialog = new AlertDialog.Builder(ListCalcActivity.this)
-                .setMessage(getString(R.string.delete_message))
+        AlertDialog alertDialog = new AlertDialog.Builder(context)
+                .setMessage(context.getString(R.string.delete_message))
                 .setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.dismiss())
                 .setPositiveButton(android.R.string.ok, (dialog, which) -> {
 
                     new Thread(() -> {
-                        SqlHelper sqlHelper = SqlHelper.getInstance(ListCalcActivity.this);
+                        SqlHelper sqlHelper = SqlHelper.getInstance(context);
                         long calcId = sqlHelper.removeItem(type, id);
 
-                        runOnUiThread(() -> {
+                        activity.runOnUiThread(() -> {
                             if (calcId > 0) {
-                                Toast.makeText(ListCalcActivity.this, R.string.calc_removed, Toast.LENGTH_LONG).show();
+                                Toast.makeText(context, R.string.calc_removed, Toast.LENGTH_LONG).show();
                                 datas.remove(position);
                                 notifyDataSetChanged();
                             }
