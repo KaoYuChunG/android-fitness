@@ -34,7 +34,11 @@ public class TmbActivity extends AppCompatActivity {
         spinner = findViewById(R.id.spinner_tmb_lifestyle);
 
         Button btnSend = findViewById(R.id.btn_tmp_send);
+        buttonSend(btnSend);
 
+    }
+
+    private void buttonSend(Button btnSend) {
         btnSend.setOnClickListener(v -> {
             if (!validate()) {
                 Toast.makeText(TmbActivity.this, R.string.fields_message, Toast.LENGTH_LONG).show();
@@ -53,45 +57,49 @@ public class TmbActivity extends AppCompatActivity {
             double tmb = tmbResponse(result);
             Log.d("TESTE", "" + tmb);
 
-            AlertDialog dialog = new AlertDialog.Builder(TmbActivity.this)
-//                    usa getString() para mostrar data de acordo com code no xml
-                    .setMessage(getString(R.string.tmb_response, tmb))
-                    .setNegativeButton(android.R.string.cancel, (dialog1, which) -> dialog1.dismiss())
-                    .setPositiveButton(android.R.string.ok, ((dialog1, which) -> {
-                        SqlHelper sqlHelper = SqlHelper.getInstance(TmbActivity.this);
-//                      Thread serve para trabalha com service paralelo
-                        new Thread(() -> {
-                            int updateId = 0;
-
-                            // verifica se tem ID vindo da tela anterior quando é UPDATE
-                            if (getIntent().getExtras() != null)
-                                updateId = getIntent().getExtras().getInt("updateId", 0);
-
-                            long calcId;
-                            // verifica se é update ou create
-                            if (updateId > 0) {
-                                calcId = sqlHelper.updateItem("tmb", tmb, updateId);
-                            } else {
-                                calcId = sqlHelper.addItem("tmb", tmb);
-                            }
-                            runOnUiThread(() -> {
-                                Log.d("Thread", "no Thread");
-                                if (calcId > 0) {
-                                    Toast.makeText(TmbActivity.this, R.string.saved, Toast.LENGTH_SHORT).show();
-                                    openListCalcActivity();
-                                }
-                            });
-                        }).start();
-                    }))
-                    .create();
-
-            dialog.show();
+            getDialog(result, tmb);
 
             //controle para teclato ... esconde teclato
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(editHeight.getWindowToken(), 0);
             imm.hideSoftInputFromWindow(editWeight.getWindowToken(), 0);
         });
+    }
+
+    private void getDialog(double result, double tmb) {
+        AlertDialog dialog = new AlertDialog.Builder(TmbActivity.this)
+//                    usa getString() para mostrar data de acordo com code no xml
+                .setMessage(getString(R.string.tmb_response, tmb))
+                .setNegativeButton(android.R.string.cancel, (dialog1, which) -> dialog1.dismiss())
+                .setPositiveButton(android.R.string.ok, ((dialog1, which) -> {
+                    SqlHelper sqlHelper = SqlHelper.getInstance(TmbActivity.this);
+//                      Thread serve para trabalha com service paralelo
+                    new Thread(() -> {
+                        int updateId = 0;
+
+                        // verifica se tem ID vindo da tela anterior quando é UPDATE
+                        if (getIntent().getExtras() != null)
+                            updateId = getIntent().getExtras().getInt("updateId", 0);
+
+                        long calcId;
+                        // verifica se é update ou create
+                        if (updateId > 0) {
+                            calcId = sqlHelper.updateItem("tmb", tmb, updateId);
+                        } else {
+                            calcId = sqlHelper.addItem("tmb", tmb);
+                        }
+                        runOnUiThread(() -> {
+                            Log.d("Thread", "no Thread");
+                            if (calcId > 0) {
+                                Toast.makeText(TmbActivity.this, R.string.saved, Toast.LENGTH_SHORT).show();
+                                openListCalcActivity();
+                            }
+                        });
+                    }).start();
+                }))
+                .create();
+
+        dialog.show();
     }
 
     private double tmbResponse(double tmb) {

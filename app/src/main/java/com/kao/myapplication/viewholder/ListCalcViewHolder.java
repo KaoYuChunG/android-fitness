@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import com.kao.myapplication.OnAdapterItemClickListener;
 import com.kao.myapplication.R;
-import com.kao.myapplication.Register;
+import com.kao.myapplication.model.Register;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

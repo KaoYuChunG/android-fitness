@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.util.Log;
 import com.kao.myapplication.adapter.ListCalcAdapter;
+import com.kao.myapplication.model.Register;
+
 import java.util.List;
 
 

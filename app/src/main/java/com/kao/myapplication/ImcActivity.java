@@ -33,8 +33,10 @@ public class ImcActivity extends AppCompatActivity {
         editWeight = findViewById(R.id.edit_imc_weight);
 
         Button btnSend = findViewById(R.id.btn_imc_send);
+        buttonSend(btnSend);
+    }
 
-
+    private void buttonSend(Button btnSend) {
         //btnSend.setOnClickListener((view) -> {});  mesmo coisa da baixo
         btnSend.setOnClickListener(v -> {
             if(!validate()) {
@@ -54,46 +56,49 @@ public class ImcActivity extends AppCompatActivity {
 
             int imcResponseId = imcResponse(result);
 
-            AlertDialog dialog = new AlertDialog.Builder(ImcActivity.this)
-                    .setTitle(getString(R.string.imc_response,  result))
-                    .setMessage(imcResponseId)
-                    .setNegativeButton(android.R.string.cancel, (dialog1, which) -> dialog1.dismiss())
-                    .setPositiveButton(android.R.string.ok, ((dialog1, which) -> {
-                        SqlHelper sqlHelper = SqlHelper.getInstance(ImcActivity.this);
-//                      Thread serve para trabalha com service paralelo
-                        new Thread(() -> {
-                            int updateId = 0;
-
-                            // verifica se tem ID vindo da tela anterior quando é UPDATE
-                            if (getIntent().getExtras() != null)
-                                updateId = getIntent().getExtras().getInt("updateId", 0);
-
-                            long calcId;
-                            // verifica se é update ou create
-                            if (updateId > 0) {
-                                calcId = sqlHelper.updateItem("imc", result, updateId);
-                            } else {
-                                calcId = sqlHelper.addItem("imc", result);
-                            }
-
-                            runOnUiThread(() -> {
-                                Log.d("Thread","no Thread");
-                                if(calcId > 0) {
-                                    Toast.makeText(ImcActivity.this, R.string.saved,Toast.LENGTH_SHORT).show();
-                                    openListCalcActivity();
-                                }
-                            });
-                        }).start();
-                    }))
-                    .create();
-
-            dialog.show();
+            getDialog(result, imcResponseId);
 
             //controle para teclato ... esconde teclato
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(editHeight.getWindowToken(), 0);
             imm.hideSoftInputFromWindow(editWeight.getWindowToken(), 0);
         });
+    }
+
+    private void getDialog(double result, int imcResponseId) {
+        AlertDialog dialog = new AlertDialog.Builder(ImcActivity.this)
+                .setTitle(getString(R.string.imc_response,  result))
+                .setMessage(imcResponseId)
+                .setNegativeButton(android.R.string.cancel, (dialog1, which) -> dialog1.dismiss())
+                .setPositiveButton(android.R.string.ok, ((dialog1, which) -> {
+                    SqlHelper sqlHelper = SqlHelper.getInstance(ImcActivity.this);
+//                      Thread serve para trabalha com service paralelo
+                    new Thread(() -> {
+                        int updateId = 0;
+
+                        // verifica se tem ID vindo da tela anterior quando é UPDATE
+                        if (getIntent().getExtras() != null)
+                            updateId = getIntent().getExtras().getInt("updateId", 0);
+
+                        long calcId;
+                        // verifica se é update ou create
+                        if (updateId > 0) {
+                            calcId = sqlHelper.updateItem("imc", result, updateId);
+                        } else {
+                            calcId = sqlHelper.addItem("imc", result);
+                        }
+
+                        runOnUiThread(() -> {
+                            Log.d("Thread","no Thread");
+                            if(calcId > 0) {
+                                Toast.makeText(ImcActivity.this, R.string.saved,Toast.LENGTH_SHORT).show();
+                                openListCalcActivity();
+                            }
+                        });
+                    }).start();
+                }))
+                .create();
+        dialog.show();
     }
 
     @Override

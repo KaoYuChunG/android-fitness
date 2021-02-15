@@ -3,27 +3,19 @@ package com.kao.myapplication.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kao.myapplication.ImcActivity;
-import com.kao.myapplication.ListCalcActivity;
 import com.kao.myapplication.OnAdapterItemClickListener;
 import com.kao.myapplication.R;
-import com.kao.myapplication.Register;
+import com.kao.myapplication.model.Register;
 import com.kao.myapplication.SqlHelper;
 import com.kao.myapplication.TmbActivity;
 import com.kao.myapplication.viewholder.ListCalcViewHolder;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -33,7 +25,7 @@ public class ListCalcAdapter extends RecyclerView.Adapter<ListCalcViewHolder> im
 
     private List<Register> datas;
     private Context context;
-    private Activity activity;
+//    private Activity activity;
 
     //      cria variavel e construtor para pegar items
     public ListCalcAdapter(List<Register> datas, Context context) {
@@ -91,10 +83,11 @@ public class ListCalcAdapter extends RecyclerView.Adapter<ListCalcViewHolder> im
                         SqlHelper sqlHelper = SqlHelper.getInstance(context);
                         long calcId = sqlHelper.removeItem(type, id);
 
-                        activity.runOnUiThread(() -> {
+                        ((Activity)context).runOnUiThread(() -> {
                             if (calcId > 0) {
                                 Toast.makeText(context, R.string.calc_removed, Toast.LENGTH_LONG).show();
                                 datas.remove(position);
+                                //atualiza lista
                                 notifyDataSetChanged();
                             }
                         });
