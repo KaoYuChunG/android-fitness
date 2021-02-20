@@ -38,7 +38,7 @@
             android:layout_height="wrap_content" />
 
         <Button
-            android:id="@+id/btn_tmp_send"
+            android:id="@+id/btn_tmb_send"
             android:text="@string/calc"
             style="@style/ButtomForm"/>
     </LinearLayout>

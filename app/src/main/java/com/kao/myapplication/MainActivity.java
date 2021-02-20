@@ -1,11 +1,5 @@
 package com.kao.myapplication;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -18,96 +12,102 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 public class MainActivity extends AppCompatActivity {
 
-//    private View btnImc;
-    private RecyclerView mainRv;
+	private RecyclerView rvMain;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
 
-        mainRv = findViewById(R.id.main_rv);
-        List<MainItem> mainItems = new ArrayList<>();
-        mainItems.add(new MainItem(1, R.drawable.ic_baseline_wb_sunny_24, R.string.label_imc, Color.GREEN));
-        mainItems.add(new MainItem(2, R.drawable.ic_baseline_whatshot_24, R.string.label_tmp, Color.GRAY));
-//      definir o comportamento do layout do recyclerView
-//      mosaic
-//      grid
-//      Linear
-        mainRv.setLayoutManager(new GridLayoutManager(this, 2));
-        MainAdapter adapter = new MainAdapter(mainItems);
-        adapter.setOnItemClickListener(id -> {
-            switch (id) {
-                case 1:
-                    startActivity(new Intent(MainActivity.this, ImcActivity.class));
-                    break;
-                case 2:
-                    startActivity(new Intent(MainActivity.this, TmbActivity.class));
-                    break;
-            }
-        });
-        mainRv.setAdapter(adapter);
-    }
+		rvMain = findViewById(R.id.main_rv);
 
-    private class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder> {
+		List<MainItem> mainItems = new ArrayList<>();
+		mainItems.add(new MainItem(1, R.drawable.ic_baseline_wb_sunny_24, R.string.label_imc, Color.GREEN));
+		mainItems.add(new MainItem(2, R.drawable.ic_baseline_whatshot_24, R.string.label_tmb, Color.YELLOW));
 
-        private List<MainItem> mainItems;
-        private OnItemClickListener listener;
+		// 1 -> Definir o comportamento de exibição do layout da recyclerview
+		// mosaic
+		// grid
+		// linear (horizontal | vertical)
+		rvMain.setLayoutManager(new GridLayoutManager(this, 2));
+		MainAdapter adapter = new MainAdapter(mainItems);
 
-        public void setOnItemClickListener(OnItemClickListener listener) {
-            this.listener = listener;
-        }
+		adapter.setListener(id -> {
+			switch (id) {
+				case 1:
+					startActivity(new Intent(MainActivity.this, ImcActivity.class));
+					break;
+				case 2:
+					startActivity(new Intent(MainActivity.this, TmbActivity.class));
+					break;
+			}
+		});
 
-        //      cria variavel e construtor para pegar items
-        public MainAdapter(List<MainItem> mainItems) {
-            this.mainItems = mainItems;
-        }
+		rvMain.setAdapter(adapter);
+	}
 
-        @NonNull
-        @Override
-        public MainViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-//          aqui relaciona ao layout filho
-            return new MainViewHolder(getLayoutInflater().inflate(R.layout.main_item, parent, false));
-        }
+	private class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder> {
 
-        @Override
-        public void onBindViewHolder(@NonNull MainViewHolder holder, int position) {
-            MainItem mainItemCurrent = mainItems.get(position);
-//          cria um funcao bind para pegar position
-            holder.bind(mainItemCurrent);
-        }
+		private List<MainItem> mainItems;
+		private OnItemClickListener listener;
 
-        @Override
-        public int getItemCount() {
-            return mainItems.size();
-        }
+		public MainAdapter(List<MainItem> mainItems) {
+			this.mainItems = mainItems;
+		}
 
-        private class MainViewHolder extends  RecyclerView.ViewHolder {
+		public void setListener(OnItemClickListener listener) {
+			this.listener = listener;
+		}
 
-            public MainViewHolder(@NonNull View itemView) {
-                super(itemView);
+		@NonNull
+		@Override
+		public MainViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+			return new MainViewHolder(getLayoutInflater().inflate(R.layout.main_item, parent, false));
+		}
 
-            }
+		@Override
+		public void onBindViewHolder(@NonNull MainViewHolder holder, int position) {
+			MainItem mainItemCurrent = mainItems.get(position);
+			holder.bind(mainItemCurrent);
+		}
 
-            //      cria um funcao para pegar position, ou passa informacao para tela
-            public void bind( MainItem item) {
+		@Override
+		public int getItemCount() {
+			return mainItems.size();
+		}
 
-                TextView textView = itemView.findViewById(R.id.item_text_name);
-                ImageView imgView = itemView.findViewById(R.id.item_image_icon);
-                LinearLayout btnImc = (LinearLayout) itemView.findViewById(R.id.btn_imc);
+		// Entenda como sendo a VIEW DA CELULA que está dentro do RecyclerView
+		private class MainViewHolder extends RecyclerView.ViewHolder {
 
-                btnImc.setOnClickListener(view -> {
-                    listener.onClick(item.getId());
-                });
+			public MainViewHolder(@NonNull View itemView) {
+				super(itemView);
+			}
 
-                textView.setText(item.getTextStringId());
-                imgView.setImageResource(item.getDrawableId());
-                btnImc.setBackgroundColor(item.getColor());
-            }
-        }
-    }
+			public void bind(MainItem item) {
+				TextView txtName = itemView.findViewById(R.id.item_text_name);
+				ImageView imgIcon = itemView.findViewById(R.id.item_image_icon);
+				LinearLayout btnImc = (LinearLayout) itemView.findViewById(R.id.btn_imc);
+
+				btnImc.setOnClickListener(view -> {
+					listener.onClick(item.getId());
+				});
+
+				txtName.setText(item.getTextStringId());
+				imgIcon.setImageResource(item.getDrawableId());
+				btnImc.setBackgroundColor(item.getColor());
+			}
+		}
+
+	}
+
+
 
 
 }

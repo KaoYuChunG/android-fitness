@@ -29,5 +29,5 @@
     <string name="saved">A informação foi Salvado!!</string>
     <string name="ok">ok</string>
     <string name="list_response">result: %1$.2f  -  data: %2$s</string>
-    <string name="label_tmp">TMP</string>
+    <string name="label_tmb">TMP</string>
 </resources>
