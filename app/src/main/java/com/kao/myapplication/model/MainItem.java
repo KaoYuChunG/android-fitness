@@ -1,4 +1,4 @@
-package com.kao.myapplication;
+package com.kao.myapplication.model;
 
 public class MainItem {
 

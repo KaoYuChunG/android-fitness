@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.kao.myapplication.model.MainItem;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
 		List<MainItem> mainItems = new ArrayList<>();
 		mainItems.add(new MainItem(1, R.drawable.ic_baseline_wb_sunny_24, R.string.label_imc, Color.GREEN));
 		mainItems.add(new MainItem(2, R.drawable.ic_baseline_whatshot_24, R.string.label_tmb, Color.YELLOW));
+		mainItems.add(new MainItem(3, R.drawable.ic_baseline_ac_unit_24, R.string.label_alarm, Color.YELLOW));
 
 		// 1 -> Definir o comportamento de exibição do layout da recyclerview
 		// mosaic
@@ -46,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
 					break;
 				case 2:
 					startActivity(new Intent(MainActivity.this, TmbActivity.class));
+					break;
+				case 3:
+					startActivity(new Intent(MainActivity.this, AlarmActivity.class));
 					break;
 			}
 		});

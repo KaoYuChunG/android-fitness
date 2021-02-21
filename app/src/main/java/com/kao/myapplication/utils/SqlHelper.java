@@ -1,4 +1,4 @@
-package com.kao.myapplication;
+package com.kao.myapplication.utils;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
+import com.kao.myapplication.model.Register;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -24,7 +26,7 @@ public class SqlHelper extends SQLiteOpenHelper {
 
 	private static SqlHelper INSTANCE;
 
-	static SqlHelper getInstance(Context context) {
+	public static SqlHelper getInstance(Context context) {
 		if (INSTANCE == null)
 			INSTANCE = new SqlHelper(context);
 		return INSTANCE;
@@ -46,7 +48,7 @@ public class SqlHelper extends SQLiteOpenHelper {
 		Log.d("Teste", "on Upgrade disparado");
 	}
 
-	List<Register> getRegistersBy(String type) {
+	public List<Register> getRegistersBy(String type) {
 		List<Register> registers = new ArrayList<>();
 
 		SQLiteDatabase db = getReadableDatabase();
@@ -76,7 +78,7 @@ public class SqlHelper extends SQLiteOpenHelper {
 		return registers;
 	}
 
-	long addItem(String type, double response) {
+	public long addItem(String type, double response) {
 		SQLiteDatabase db = getWritableDatabase();
 
 		long calcId = 0;
@@ -103,7 +105,7 @@ public class SqlHelper extends SQLiteOpenHelper {
 		return calcId;
 	}
 
-	long updateItem(String type, double response, int id) {
+	public long updateItem(String type, double response, int id) {
 		SQLiteDatabase db = getWritableDatabase();
 		db.beginTransaction();
 		long calcId = 0;
@@ -128,7 +130,7 @@ public class SqlHelper extends SQLiteOpenHelper {
 		return calcId;
 	}
 
-	long removeItem(String type, int id) {
+	public long removeItem(String type, int id) {
 		SQLiteDatabase db = getWritableDatabase();
 		db.beginTransaction();
 		long calcId = 0;
